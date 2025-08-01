@@ -15,6 +15,7 @@
 #ATS:toss_4_x86_64_ib        SELF SlurmProcessorScheduled 36
 #ATS:toss_4_x86_64           SELF SlurmProcessorScheduled 36
 #ATS:toss_4_x86_64_ib_cray   SELF SlurmProcessorScheduled 64
+#ATS:hpc6a_noefa             SELF SlurmProcessorScheduled 96
 
 import inspect
 import math
@@ -332,6 +333,9 @@ ATS NOTICE: Slurm sees ATS or Shell as itself using a CPU.
         srun_mpi_type='--comment="nompitype"'
         if host.startswith('rznevaxxx'):
             srun_mpi_type='--mpi=pmi2'
+
+        if host.startswith('ip'):
+            srun_mpi_type='--mpi=pmix_v5'
 
         srun_unbuffered='--comment="nounbuffered"'
         if configuration.options.unbuffered:
