@@ -110,7 +110,7 @@ def addOptions(parser):
         add_flux_only_options(parser)
 
     # Toss specific options (slurm)
-    elif SYS_TYPE.startswith('toss'):
+    elif SYS_TYPE.startswith('toss') or SYS_TYPE.startswith('hpc6a'):
         add_toss3_only_options(parser)
 
     # Sierra Specific options (lsf)
