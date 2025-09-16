@@ -21,12 +21,15 @@ num_cpus = multiprocessing.cpu_count()
 
 # Get hostname to set defaults for if Flux is the native scheduler
 my_hostname = os.environ.get("HOSTNAME", "unset")
-if (my_hostname.startswith('rzvernal')):
+if my_hostname.startswith('tioga')    or my_hostname.startswith('rzadams')  or \
+   my_hostname.startswith('rzvernal') or my_hostname.startswith('tuolumne') or \
+   my_hostname.startswith('tenaya')   or my_hostname.startswith('corona')   or \
+   my_hostname.startswith('elcap') :
     flux_native = True
-    time_limit = 240
+    time_limit = 60
 else:
     flux_native = False
-    time_limit = 240
+    time_limit = 60
 
 def _parse_args() -> argparse.Namespace:
     """Parse arguments for formatting ATS python files."""
@@ -44,6 +47,11 @@ def _parse_args() -> argparse.Namespace:
         default=num_cpus,
         type=int,
         help="Max number of cores per node. Overrides default ATS detection of cores per node",
+    )
+    parser.add_argument(
+        "--CPX",
+        action="store_true",
+        help="Allocate nodes in CPX mode on ATS-4",
     )
     parser.add_argument(
         "--job_time",
@@ -139,15 +147,26 @@ def main():
 
         # else start flux from the login node
         else:
-            cmd = [
-                "flux", "alloc",
-                "-N", f"{args.numNodes}",
-                "-n", f"{total_cores}",
-                "-t", f"{args.job_time}m",
-                "--exclusive",
-                "--output=atsflux.log"
-            ]
-
+            if args.CPX:
+                cmd = [
+                    "flux", "alloc",
+                    "-N", f"{args.numNodes}",
+                    "-n", f"{total_cores}",
+                    "-t", f"{args.job_time}m",
+                    "--exclusive",
+                    "--conf=resource.rediscover=true",
+                    "--setattr=gpumode=CPX",
+                    "--output=atsflux.log"
+                ]
+            else:
+                cmd = [
+                    "flux", "alloc",
+                    "-N", f"{args.numNodes}",
+                    "-n", f"{total_cores}",
+                    "-t", f"{args.job_time}m",
+                    "--exclusive",
+                    "--output=atsflux.log"
+                ]
 
     else:
         print("running flux under slurm")

@@ -143,6 +143,9 @@ def add_flux_only_options(parser):
                       Perform 'flux help run' for useful oprions for your project.
                       String is not checked for validity.  Quotes in the string 
                       may need to be escaped or otherwise specified''')
+    parser.add_option('--cpx', action='store_true', default=False, 
+                      help='''Flux option: Assume CPX allocation of nodes on ATS-4, 
+                      utilizing 24 GPUS per node''')
     parser.add_option('--nn', dest='flux_nn', type='int', default=-1,
                       help='''Flux option: -nn option. Over-rides test
                       specific settings of nn (number of nodes). Setting this
@@ -463,13 +466,13 @@ def get_machine_factory(module_name, machine_class,
         return machine_factory
     
     except ModuleNotFoundError as e:
-        if (e == ModuleNotFoundError(module_name)):
+        if (module_name in e.name):
             log(f"Module {module_name} not found in package {machine_package}. Continuing search.",
                 echo=False)
             return None
         else:
-            # If a module error occurs for a module other than module_name, raise an error
-            raise e
+            log(f"Importing {module_name} from {machine_package} caused the following error:\n{e}", echo=True)
+            return None
 
 def get_machine(file_text, file_name, is_batch=False):
     header = '#BATS:' if is_batch else '#ATS:'
