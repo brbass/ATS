@@ -524,9 +524,8 @@ def get_machine_entry_points(machine_class):
     """
     log("Machine Factory: looping over available machine plugins:",
         echo=False)
-    ats_machines = {machine.name: machine
-                    for group, machines in entry_points().items()
-                    if group == 'ats.machines' for machine in machines}
+    from importlib.metadata import entry_points
+    ats_machines = {ep.name: ep.load() for ep in entry_points(group='ats.machines')}
     log(f"Machine Factory: found machine plugins: {ats_machines}",
         echo=False)
     for name, machine_factory in ats_machines.items():
