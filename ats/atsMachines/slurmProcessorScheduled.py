@@ -18,6 +18,7 @@
 #ATS:hpc6a_noefa             SELF SlurmProcessorScheduled 96
 #ATS:hpc7a_noefa             SELF SlurmProcessorScheduled 192
 #ATS:hpc8a_noefa             SELF SlurmProcessorScheduled 192
+#ATS:m6a_8x                  SELF SlurmProcessorScheduled 16
 
 import inspect
 import math
