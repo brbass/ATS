@@ -17,6 +17,7 @@
 #ATS:toss_4_x86_64_ib_cray   SELF SlurmProcessorScheduled 64
 #ATS:hpc6a_noefa             SELF SlurmProcessorScheduled 96
 #ATS:hpc7a_noefa             SELF SlurmProcessorScheduled 192
+#ATS:hpc8a_noefa             SELF SlurmProcessorScheduled 192
 
 import inspect
 import math
